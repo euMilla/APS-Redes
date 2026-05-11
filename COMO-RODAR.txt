@@ -1,0 +1,45 @@
+COMO RODAR O APS REDES
+======================
+
+1. Extraia o ZIP do projeto.
+
+2. Instale o Java JDK 17 ou superior.
+   Para conferir, abra o Prompt/PowerShell e rode:
+
+   java -version
+
+3. Instale o Maven, se ainda nao tiver.
+   Para conferir, rode:
+
+   mvn -version
+
+4. Na pasta do projeto, execute:
+
+   instalar-aplicacao.bat
+
+   Esse script baixa as dependencias do pom.xml, compila o projeto e prepara a
+   pasta lib automaticamente.
+
+5. Depois da instalacao, execute:
+
+   iniciar-aplicacao.bat
+
+   O script abre o servidor e dois clientes de teste.
+
+ACESSOS DEMO
+============
+
+Membro: membro123
+Admin: admin123
+
+Usuarios de teste:
+
+membro-demo
+inspetor-demo
+coordenador-demo
+
+OBSERVACAO
+==========
+
+A pasta lib nao vai para o Git porque ela deixa o projeto grande. Isso e normal.
+As dependencias sao baixadas automaticamente pelo Maven usando o arquivo pom.xml.
