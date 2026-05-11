@@ -1,0 +1,493 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Rectangle?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="aps.client.controller.ClientController"
+            stylesheets="@style.css"
+            fx:id="rootShell"
+            styleClass="root-shell">
+    <top>
+        <HBox fx:id="topBar" alignment="CENTER_LEFT" spacing="16" styleClass="top-bar">
+            <padding>
+                <Insets top="18" right="28" bottom="18" left="28"/>
+            </padding>
+            <Button fx:id="sidebarToggleButton" text="Menu" onAction="#onToggleSidebar" styleClass="ghost-button"/>
+            <VBox spacing="2">
+                <Label text="Painel de Organização" styleClass="app-title"/>
+                <Label text="Secretaria do Meio Ambiente - Monitoramento Rio Tiete" styleClass="app-subtitle"/>
+            </VBox>
+            <TextField fx:id="searchField" promptText="Pesquisar no sistema" styleClass="search-field" HBox.hgrow="ALWAYS"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Label fx:id="currentRoomLabel" text="Sem canal" styleClass="room-chip"/>
+            <ComboBox fx:id="presenceBox" prefWidth="126" styleClass="presence-box"/>
+            <ComboBox fx:id="themeBox" prefWidth="102" styleClass="theme-box"/>
+            <StackPane styleClass="notification-control">
+                <Button fx:id="notificationButton" text="!" onAction="#onShowNotifications" styleClass="notification-button"/>
+                <Label fx:id="notificationCountLabel" text="0" styleClass="notification-badge" StackPane.alignment="TOP_RIGHT"/>
+            </StackPane>
+            <HBox alignment="CENTER_LEFT" spacing="8" styleClass="status-chip">
+                <Region fx:id="statusDot" styleClass="status-dot"/>
+                <Label fx:id="statusLabel" text="Offline" styleClass="status-label"/>
+            </HBox>
+            <Button text="Sair" onAction="#onLogoutToLogin" styleClass="ghost-button"/>
+        </HBox>
+    </top>
+
+    <left>
+        <ScrollPane fx:id="leftScroll" fitToWidth="true" hbarPolicy="NEVER" styleClass="side-scroll">
+        <content>
+        <VBox fx:id="leftPanel" spacing="12" styleClass="left-panel">
+            <padding>
+                <Insets top="18" right="14" bottom="18" left="14"/>
+            </padding>
+            <VBox spacing="2" styleClass="side-brand">
+                <Label text="APS" styleClass="side-logo"/>
+                <Label text="REDES" styleClass="side-title"/>
+            </VBox>
+            <VBox spacing="7" styleClass="side-nav">
+                <Button fx:id="loginNavButton" text="Login" onAction="#onShowLogin" styleClass="nav-button" maxWidth="Infinity"/>
+                <Button fx:id="chatNavButton" text="Chat" onAction="#onShowChat" styleClass="nav-button" maxWidth="Infinity"/>
+                <Button fx:id="sessionNavButton" text="Painel de Organização" onAction="#onShowSession" styleClass="nav-button" maxWidth="Infinity"/>
+                <Button fx:id="reportsNavButton" text="Relatórios" onAction="#onShowReports" styleClass="nav-button" maxWidth="Infinity"/>
+                <Button fx:id="occurrencesNavButton" text="Ocorrências" onAction="#onShowOccurrences" styleClass="nav-button" maxWidth="Infinity"/>
+                <Button fx:id="analyticsNavButton" text="Analítico" onAction="#onShowAnalytics" styleClass="nav-button" maxWidth="Infinity"/>
+                <Button fx:id="rolesNavButton" text="Cargos" onAction="#onShowRoles" styleClass="nav-button" maxWidth="Infinity"/>
+                <Button fx:id="adminNavButton" text="Senhas" onAction="#onShowAdmin" styleClass="nav-button" maxWidth="Infinity"/>
+                <Button fx:id="auditNavButton" text="Auditoria" onAction="#onShowAudit" styleClass="nav-button" maxWidth="Infinity"/>
+                <Button fx:id="mapNavButton" text="Mapa Tiete" onAction="#onShowMap" styleClass="nav-button" maxWidth="Infinity"/>
+                <Button fx:id="historyNavButton" text="Historico" onAction="#onShowHistory" styleClass="nav-button" maxWidth="Infinity"/>
+                <Button fx:id="profileNavButton" text="Perfil" onAction="#onShowProfile" styleClass="nav-button" maxWidth="Infinity"/>
+            </VBox>
+            <Label text="Canais" styleClass="section-title"/>
+            <ListView fx:id="channelsList" VBox.vgrow="ALWAYS" styleClass="channel-list"/>
+            <Button fx:id="joinChannelButton" text="Entrar no canal" onAction="#onJoinSelectedChannel" styleClass="primary-button" maxWidth="Infinity"/>
+        </VBox>
+        </content>
+        </ScrollPane>
+    </left>
+
+    <center>
+        <ScrollPane fitToWidth="true" fitToHeight="true" hbarPolicy="NEVER" styleClass="app-scroll">
+        <content>
+        <StackPane styleClass="center-stack">
+            <VBox fx:id="loginPage" spacing="18" alignment="CENTER" fillWidth="false" styleClass="content-panel login-page">
+                <padding>
+                    <Insets top="28" right="28" bottom="28" left="28"/>
+                </padding>
+                <HBox fx:id="loginShell" spacing="0" alignment="CENTER" prefWidth="980" maxWidth="980" styleClass="login-shell">
+                    <VBox spacing="14" minWidth="320" prefWidth="470" styleClass="login-form">
+                        <Label text="APS Redes" styleClass="login-brand"/>
+                        <Label text="Login" styleClass="login-form-title"/>
+                        <Label text="Acesse como inspetor para entrar nos canais de operacao e reportar atividades das industrias monitoradas." wrapText="true" styleClass="login-copy muted"/>
+                        <TextField fx:id="loginNameField" promptText="Nome do usuario" styleClass="input"/>
+                        <PasswordField fx:id="memberPasswordField" promptText="Senha do membro" styleClass="input"/>
+                        <Button fx:id="memberLoginButton" text="Entrar" onAction="#onLoginMember" styleClass="primary-button" maxWidth="Infinity"/>
+                        <Button fx:id="adminAccessButton" text="Area do administrador" onAction="#onShowAdminLogin" styleClass="link-button" maxWidth="Infinity"/>
+                        <Label fx:id="loginStatusLabel" text="" visible="false" managed="false" styleClass="transfer-label"/>
+                    </VBox>
+                    <VBox fx:id="loginHero" spacing="14" alignment="CENTER_LEFT" minWidth="280" prefWidth="470" styleClass="login-hero">
+                        <padding>
+                            <Insets top="56" right="44" bottom="56" left="44"/>
+                        </padding>
+                        <Label text="PAINEL OPERACIONAL" maxWidth="360" styleClass="login-kicker"/>
+                        <Label text="Rede em controle" wrapText="true" maxWidth="380" styleClass="login-title"/>
+                        <Label text="Entre no servidor, escolha um canal de vistoria e acompanhe relatorios em tempo real para a Secretaria." wrapText="true" maxWidth="360" styleClass="login-copy"/>
+                        <HBox spacing="10" alignment="CENTER_LEFT">
+                            <Label text="CHAT" styleClass="login-badge"/>
+                            <Label text="TCP" styleClass="login-badge amber"/>
+                            <Label text="RELATORIOS" styleClass="login-badge blue"/>
+                        </HBox>
+                        <VBox spacing="7" maxWidth="320" styleClass="server-corner">
+                            <Label text="Servidor TCP" styleClass="section-title"/>
+                            <Label text="IP do servidor" styleClass="field-label"/>
+                            <TextField fx:id="hostField" text="192.168.1.14" promptText="Ex: 127.0.0.1" styleClass="input"/>
+                            <Label text="Porta" styleClass="field-label"/>
+                            <TextField fx:id="portField" text="5050" promptText="Ex: 5050" styleClass="input"/>
+                        </VBox>
+                    </VBox>
+                </HBox>
+            </VBox>
+
+            <VBox fx:id="adminLoginPage" spacing="18" alignment="CENTER" fillWidth="false" visible="false" managed="false" styleClass="content-panel login-page">
+                <padding>
+                    <Insets top="28" right="28" bottom="28" left="28"/>
+                </padding>
+                <HBox fx:id="adminLoginShell" spacing="0" alignment="CENTER" prefWidth="980" maxWidth="980" styleClass="login-shell admin-login-shell">
+                    <VBox spacing="14" minWidth="320" prefWidth="470" styleClass="login-form">
+                        <Label text="APS Redes" styleClass="login-brand"/>
+                        <Label text="Administrador" styleClass="login-form-title"/>
+                        <Label text="Area separada da Secretaria para liberar cargos, senhas e visualizacao geral das equipes de campo." wrapText="true" styleClass="login-copy muted"/>
+                        <Label text="A conexao TCP usa o endereco configurado na tela de login." wrapText="true" styleClass="transfer-label"/>
+                        <TextField fx:id="adminNameField" promptText="Nome do administrador" styleClass="input"/>
+                        <PasswordField fx:id="adminPasswordField" promptText="Senha do admin" styleClass="input"/>
+                        <Button fx:id="adminLoginButton" text="Entrar como admin" onAction="#onLoginAdmin" styleClass="primary-button" maxWidth="Infinity"/>
+                        <Button text="Voltar ao login" onAction="#onShowLogin" styleClass="link-button" maxWidth="Infinity"/>
+                    </VBox>
+                    <VBox fx:id="adminHero" spacing="14" alignment="CENTER_LEFT" minWidth="280" prefWidth="470" styleClass="login-hero admin-hero">
+                        <padding>
+                            <Insets top="56" right="44" bottom="56" left="44"/>
+                        </padding>
+                        <Label text="ADMIN" maxWidth="360" styleClass="login-kicker"/>
+                        <Label text="Controle central" wrapText="true" maxWidth="380" styleClass="login-title"/>
+                        <Label text="Gerencie permissoes, acompanhe relatorios e ajuste acessos do sistema." wrapText="true" maxWidth="360" styleClass="login-copy"/>
+                        <HBox spacing="10" alignment="CENTER_LEFT">
+                            <Label text="CARGOS" styleClass="login-badge"/>
+                            <Label text="SENHAS" styleClass="login-badge amber"/>
+                            <Label text="AUDITORIA" styleClass="login-badge blue"/>
+                        </HBox>
+                    </VBox>
+                </HBox>
+            </VBox>
+
+            <VBox fx:id="chatPage" spacing="13" visible="false" managed="false" styleClass="content-panel">
+                <padding>
+                    <Insets top="21" right="24" bottom="21" left="21"/>
+                </padding>
+                <ListView fx:id="chatList" VBox.vgrow="ALWAYS" styleClass="chat-list"/>
+                <HBox spacing="13" alignment="CENTER_LEFT" styleClass="composer">
+                    <TextField fx:id="messageField" promptText="Escolha um canal e envie uma mensagem..." HBox.hgrow="ALWAYS" styleClass="message-input"/>
+                    <Button fx:id="sendButton" text="Enviar" onAction="#onSend" styleClass="primary-button"/>
+                    <Button fx:id="webcamButton" text="Webcam" onAction="#onCaptureWebcam" styleClass="ghost-button"/>
+                </HBox>
+            </VBox>
+
+            <VBox fx:id="rolesPage" spacing="13" visible="false" managed="false" styleClass="content-panel page-panel">
+                <padding>
+                    <Insets top="21" right="24" bottom="21" left="21"/>
+                </padding>
+                <Label text="Cargos" styleClass="page-title"/>
+                <HBox spacing="18" VBox.vgrow="ALWAYS">
+                    <VBox spacing="10" HBox.hgrow="ALWAYS">
+                        <Label text="Membros conectados" styleClass="section-title"/>
+                        <ListView fx:id="roleUsersList" VBox.vgrow="ALWAYS" styleClass="user-list"/>
+                    </VBox>
+                    <VBox spacing="10" minWidth="280" prefWidth="320">
+                        <Label text="Cargo" styleClass="section-title"/>
+                        <TextField fx:id="roleNameField" promptText="Ex: Chefe" styleClass="input"/>
+                        <Label text="Acessos" styleClass="section-title"/>
+                        <CheckBox fx:id="roleAlfaBox" text="Equipe Alfa" styleClass="access-check"/>
+                        <CheckBox fx:id="roleBetaBox" text="Equipe Beta" styleClass="access-check"/>
+                        <CheckBox fx:id="roleGamaBox" text="Equipe Gama" styleClass="access-check"/>
+                        <CheckBox fx:id="roleCentralBox" text="Central Operacional" styleClass="access-check"/>
+                        <Button fx:id="saveRoleButton" text="Salvar cargo" onAction="#onSaveRoleAccess" styleClass="primary-button" maxWidth="Infinity"/>
+                        <Label fx:id="roleStatusLabel" text="Selecione um membro." styleClass="transfer-label"/>
+                    </VBox>
+                </HBox>
+            </VBox>
+
+            <VBox fx:id="adminPage" spacing="13" visible="false" managed="false" styleClass="content-panel page-panel">
+                <padding>
+                    <Insets top="21" right="24" bottom="21" left="21"/>
+                </padding>
+                <Label text="Senhas" styleClass="page-title"/>
+                <VBox spacing="10" maxWidth="620" styleClass="panel-card">
+                    <Label text="Senhas ativas no servidor" styleClass="section-title"/>
+                    <PasswordField fx:id="authMemberPasswordField" promptText="Nova senha de membro" styleClass="input"/>
+                    <PasswordField fx:id="authAdminPasswordField" promptText="Nova senha de admin" styleClass="input"/>
+                    <Button fx:id="saveAuthPasswordsButton" text="Salvar senhas no servidor" onAction="#onSaveAuthPasswords" styleClass="primary-button" maxWidth="Infinity"/>
+                    <Label fx:id="authStatusLabel" text="Apenas administradores alteram senhas do sistema." styleClass="transfer-label"/>
+                </VBox>
+            </VBox>
+
+            <VBox fx:id="sessionPage" spacing="18" visible="false" managed="false" styleClass="content-panel page-panel dashboard-page">
+                <padding>
+                    <Insets top="24" right="28" bottom="24" left="28"/>
+                </padding>
+                <HBox alignment="CENTER_LEFT" spacing="16">
+                    <VBox spacing="4">
+                        <Label text="Painel Operacional" styleClass="page-title"/>
+                        <Label fx:id="sessionCountLabel" text="Status da rede e atividade dos canais" styleClass="transfer-label"/>
+                    </VBox>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Button text="Abrir chat" onAction="#onShowChat" styleClass="ghost-button"/>
+                    <Button text="Relatorios" onAction="#onShowReports" styleClass="primary-button"/>
+                </HBox>
+
+                <FlowPane hgap="14" vgap="14" prefWrapLength="1040" styleClass="dashboard-grid">
+                    <VBox spacing="6" prefWidth="235" styleClass="dashboard-card success">
+                        <Label text="CONEXAO" styleClass="dashboard-label"/>
+                        <Label fx:id="dashboardStatusLabel" text="Offline" styleClass="dashboard-value"/>
+                        <Label text="Servidor TCP central" styleClass="dashboard-note"/>
+                    </VBox>
+                    <VBox spacing="6" prefWidth="235" styleClass="dashboard-card info">
+                        <Label text="CANAL ATUAL" styleClass="dashboard-label"/>
+                        <Label fx:id="dashboardRoomLabel" text="Sem canal" styleClass="dashboard-value"/>
+                        <Label text="Escopo de chat e relatorios" styleClass="dashboard-note"/>
+                    </VBox>
+                    <VBox spacing="6" prefWidth="235" styleClass="dashboard-card warning">
+                        <Label text="PERFIL" styleClass="dashboard-label"/>
+                        <Label fx:id="dashboardRoleLabel" text="Membro" styleClass="dashboard-value"/>
+                        <Label text="Permissao ativa" styleClass="dashboard-note"/>
+                    </VBox>
+                    <VBox spacing="6" prefWidth="235" styleClass="dashboard-card accent">
+                        <Label text="RELATORIOS" styleClass="dashboard-label"/>
+                        <Label fx:id="dashboardReportsLabel" text="0 arquivos" styleClass="dashboard-value"/>
+                        <Label text="Arquivos no escopo atual" styleClass="dashboard-note"/>
+                    </VBox>
+                </FlowPane>
+
+                <HBox spacing="16" VBox.vgrow="ALWAYS">
+                    <VBox spacing="12" HBox.hgrow="ALWAYS" styleClass="dashboard-panel">
+                        <HBox alignment="CENTER_LEFT">
+                            <Label text="Equipe online" styleClass="section-title"/>
+                            <Region HBox.hgrow="ALWAYS"/>
+                            <Label text="Ao vivo" styleClass="status-pill"/>
+                        </HBox>
+                        <ListView fx:id="usersList" VBox.vgrow="ALWAYS" styleClass="user-list"/>
+                    </VBox>
+                    <VBox spacing="12" prefWidth="320" styleClass="dashboard-panel">
+                        <Label text="Resumo da operacao" styleClass="section-title"/>
+                        <Label fx:id="dashboardTodayReportsLabel" text="0 relatorios hoje" wrapText="true" styleClass="dashboard-line"/>
+                        <Label fx:id="dashboardUsersLabel" text="0 perfis online" wrapText="true" styleClass="dashboard-line"/>
+                        <Label text="Use o menu para abrir Chat, Relatorios, Cargos e Historico." wrapText="true" styleClass="dashboard-line"/>
+                        <Button text="Abrir relatorios" onAction="#onShowReports" styleClass="primary-button" maxWidth="Infinity"/>
+                        <Label text="Alerta critico" styleClass="section-title"/>
+                        <TextArea fx:id="criticalAlertArea" promptText="Ex: vazamento quimico detectado no trecho de Barueri" wrapText="true" prefRowCount="3" styleClass="report-editor"/>
+                        <Button fx:id="sendCriticalAlertButton" text="Enviar alerta critico" onAction="#onSendCriticalAlert" styleClass="danger-button" maxWidth="Infinity"/>
+                        <ListView fx:id="criticalAlertList" prefHeight="116" styleClass="history-list"/>
+                    </VBox>
+                </HBox>
+            </VBox>
+
+            <VBox fx:id="reportsPage" spacing="13" visible="false" managed="false" styleClass="content-panel page-panel">
+                <padding>
+                    <Insets top="21" right="24" bottom="21" left="21"/>
+                </padding>
+                <HBox alignment="CENTER_LEFT" spacing="12">
+                    <Label text="Relatorios" styleClass="page-title"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Button fx:id="toggleReportToolsButton" text="Abrir/fechar editor" onAction="#onToggleReportTools" styleClass="ghost-button"/>
+                </HBox>
+                <VBox fx:id="reportEditorBox" spacing="10" styleClass="panel-card">
+                    <Label text="Criar relatorio" styleClass="section-title"/>
+                    <TextField fx:id="reportTitleField" promptText="Titulo do relatorio" styleClass="input"/>
+                    <TextArea fx:id="reportBodyArea" promptText="Conteudo do relatorio" wrapText="true" prefRowCount="4" styleClass="report-editor"/>
+                    <HBox spacing="8">
+                        <Button fx:id="saveDraftButton" text="Salvar rascunho" onAction="#onSaveReportDraft" styleClass="ghost-button" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+                        <Button fx:id="createReportButton" text="Enviar relatorio" onAction="#onCreateReport" styleClass="primary-button" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+                        <Button fx:id="validateReportButton" text="Validar" onAction="#onValidateReport" styleClass="ghost-button" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+                    </HBox>
+                    <Label fx:id="reportWorkflowStatusLabel" text="Workflow: rascunho -> enviado -> validado" styleClass="transfer-label"/>
+                </VBox>
+                <HBox spacing="13" VBox.vgrow="ALWAYS">
+                    <VBox spacing="10" HBox.hgrow="ALWAYS" minWidth="260">
+                        <Label fx:id="reportListTitleLabel" text="Relatorios do canal" styleClass="section-title"/>
+                        <ListView fx:id="fileList" VBox.vgrow="ALWAYS" styleClass="file-list"/>
+                    </VBox>
+                    <VBox spacing="10" HBox.hgrow="ALWAYS" minWidth="280">
+                        <Label fx:id="reportPreviewTitleLabel" text="Leitura do relatorio" styleClass="section-title"/>
+                        <TextArea fx:id="reportPreviewArea" editable="false" wrapText="true" VBox.vgrow="ALWAYS" styleClass="report-editor"/>
+                    </VBox>
+                </HBox>
+                <ProgressBar fx:id="transferProgress" progress="0" maxWidth="Infinity" styleClass="transfer-progress"/>
+                <Label fx:id="transferLabel" text="Nenhuma transferencia ativa" styleClass="transfer-label"/>
+                <HBox spacing="8">
+                    <Button fx:id="uploadButton" text="Enviar arquivo" onAction="#onUploadFile" styleClass="primary-button" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+                    <Button fx:id="downloadButton" text="Download" onAction="#onDownloadFile" styleClass="ghost-button" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+                    <Button fx:id="refreshFilesButton" text="Atualizar" onAction="#onRefreshFiles" styleClass="ghost-button"/>
+                </HBox>
+                <HBox spacing="8">
+                    <Button text="Exportar CSV" onAction="#onExportAuditCsv" styleClass="ghost-button" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+                    <Button text="Exportar PDF" onAction="#onExportOperationsPdf" styleClass="ghost-button" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+                </HBox>
+                <HBox spacing="8">
+                    <Button text="Gerar relatorio completo" onAction="#onCreateCompleteOperationsReport" styleClass="primary-button" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+                </HBox>
+            </VBox>
+
+            <VBox fx:id="occurrencesPage" spacing="13" visible="false" managed="false" styleClass="content-panel page-panel">
+                <padding>
+                    <Insets top="21" right="24" bottom="21" left="21"/>
+                </padding>
+                <Label text="Ocorrencias Ambientais" styleClass="page-title"/>
+                <VBox spacing="13" VBox.vgrow="ALWAYS">
+                    <VBox spacing="10" maxWidth="Infinity" styleClass="panel-card">
+                        <Label text="Registrar ocorrencia" styleClass="section-title"/>
+                        <TextField fx:id="occurrenceIndustryField" promptText="Industria monitorada" styleClass="input"/>
+                        <TextField fx:id="occurrenceStretchField" promptText="Trecho do Rio Tiete" styleClass="input"/>
+                        <TextField fx:id="occurrenceTypeField" promptText="Tipo: efluente, odor, espuma, descarte" styleClass="input"/>
+                        <TextField fx:id="occurrenceSeverityField" promptText="Gravidade: baixa, media, alta, critica" styleClass="input"/>
+                        <TextArea fx:id="occurrenceDescriptionArea" promptText="Descricao da vistoria" wrapText="true" prefRowCount="3" styleClass="report-editor"/>
+                        <Button text="Salvar ocorrencia" onAction="#onSaveOccurrence" styleClass="primary-button" maxWidth="Infinity"/>
+                    </VBox>
+                    <VBox spacing="10" VBox.vgrow="ALWAYS">
+                        <HBox alignment="CENTER_LEFT">
+                            <Label text="Ocorrencias registradas" styleClass="section-title"/>
+                            <Region HBox.hgrow="ALWAYS"/>
+                            <Button text="Exportar CSV" onAction="#onExportAuditCsv" styleClass="ghost-button"/>
+                        </HBox>
+                        <ListView fx:id="occurrenceList" VBox.vgrow="ALWAYS" styleClass="history-list"/>
+                    </VBox>
+                </VBox>
+            </VBox>
+
+            <VBox fx:id="analyticsPage" spacing="16" visible="false" managed="false" styleClass="content-panel page-panel dashboard-page">
+                <padding>
+                    <Insets top="24" right="28" bottom="24" left="28"/>
+                </padding>
+                <Label text="Painel Analitico" styleClass="page-title"/>
+                <HBox spacing="14" styleClass="analytics-kpi-row">
+                    <VBox spacing="6" maxWidth="Infinity" HBox.hgrow="ALWAYS" styleClass="dashboard-card success">
+                        <Label text="RELATORIOS HOJE" styleClass="dashboard-label"/>
+                        <Label fx:id="analyticsTodayReportsLabel" text="0" styleClass="dashboard-value"/>
+                        <Label text="Arquivos enviados por TCP" styleClass="dashboard-note"/>
+                    </VBox>
+                    <VBox spacing="6" maxWidth="Infinity" HBox.hgrow="ALWAYS" styleClass="dashboard-card warning">
+                        <Label text="OCORRENCIAS" styleClass="dashboard-label"/>
+                        <Label fx:id="analyticsOccurrencesLabel" text="0" styleClass="dashboard-value"/>
+                        <Label text="Registros ambientais locais" styleClass="dashboard-note"/>
+                    </VBox>
+                    <VBox spacing="6" maxWidth="Infinity" HBox.hgrow="ALWAYS" styleClass="dashboard-card accent">
+                        <Label text="ALERTAS CRITICOS" styleClass="dashboard-label"/>
+                        <Label fx:id="analyticsCriticalAlertsLabel" text="0" styleClass="dashboard-value"/>
+                        <Label text="Com confirmacao de leitura" styleClass="dashboard-note"/>
+                    </VBox>
+                    <VBox spacing="6" maxWidth="Infinity" HBox.hgrow="ALWAYS" styleClass="dashboard-card info">
+                        <Label text="EQUIPE" styleClass="dashboard-label"/>
+                        <Label fx:id="analyticsUsersLabel" text="0" styleClass="dashboard-value"/>
+                        <Label text="Perfis no escopo atual" styleClass="dashboard-note"/>
+                    </VBox>
+                </HBox>
+                <HBox spacing="16" VBox.vgrow="ALWAYS">
+                    <VBox spacing="12" HBox.hgrow="ALWAYS" styleClass="dashboard-panel">
+                        <Label text="Volumes por indicador" styleClass="section-title"/>
+                        <VBox fx:id="analyticsBarChartHost" VBox.vgrow="ALWAYS" styleClass="chart-host"/>
+                    </VBox>
+                    <VBox spacing="12" HBox.hgrow="ALWAYS" styleClass="dashboard-panel">
+                        <Label text="Distribuicao dos registros" styleClass="section-title"/>
+                        <VBox fx:id="analyticsPieChartHost" VBox.vgrow="ALWAYS" styleClass="chart-host"/>
+                    </VBox>
+                    <VBox spacing="12" prefWidth="340" styleClass="dashboard-panel">
+                        <Label text="Leitura rapida" styleClass="section-title"/>
+                        <Label fx:id="analyticsSummaryLabel" text="Sem dados suficientes ainda." wrapText="true" styleClass="dashboard-line"/>
+                        <Button text="Atualizar dados" onAction="#onRefreshFiles" styleClass="primary-button" maxWidth="Infinity"/>
+                    </VBox>
+                </HBox>
+            </VBox>
+
+            <VBox fx:id="auditPage" spacing="13" visible="false" managed="false" styleClass="content-panel page-panel">
+                <padding>
+                    <Insets top="21" right="24" bottom="21" left="21"/>
+                </padding>
+                <HBox alignment="CENTER_LEFT" spacing="12">
+                    <Label text="Auditoria" styleClass="page-title"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Button text="Exportar CSV" onAction="#onExportAuditCsv" styleClass="ghost-button"/>
+                    <Button text="Exportar PDF" onAction="#onExportOperationsPdf" styleClass="ghost-button"/>
+                </HBox>
+                <Label fx:id="auditStatusLabel" text="Logs locais, workflow de relatorios, alertas e ocorrencias." styleClass="transfer-label"/>
+                <ListView fx:id="auditList" VBox.vgrow="ALWAYS" styleClass="history-list"/>
+            </VBox>
+
+            <VBox fx:id="mapPage" spacing="16" visible="false" managed="false" styleClass="content-panel page-panel dashboard-page">
+                <padding>
+                    <Insets top="24" right="28" bottom="24" left="28"/>
+                </padding>
+                <HBox alignment="CENTER_LEFT" spacing="12">
+                    <Label text="Mapa por Trechos do Rio Tiete" styleClass="page-title"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                </HBox>
+                <Pane fx:id="tieteMapPane" prefHeight="330" minHeight="300" styleClass="tiete-map"/>
+                <FlowPane hgap="14" vgap="14" prefWrapLength="1040" styleClass="dashboard-grid">
+                    <VBox spacing="8" prefWidth="250" styleClass="map-card">
+                        <Label text="Salesopolis" styleClass="section-title"/>
+                        <Label fx:id="mapSalesopolisLabel" text="0 ocorrencias" styleClass="dashboard-line"/>
+                        <ProgressBar fx:id="mapSalesopolisBar" progress="0" maxWidth="Infinity" styleClass="transfer-progress"/>
+                    </VBox>
+                    <VBox spacing="8" prefWidth="250" styleClass="map-card">
+                        <Label text="Mogi das Cruzes" styleClass="section-title"/>
+                        <Label fx:id="mapMogiLabel" text="0 ocorrencias" styleClass="dashboard-line"/>
+                        <ProgressBar fx:id="mapMogiBar" progress="0" maxWidth="Infinity" styleClass="transfer-progress"/>
+                    </VBox>
+                    <VBox spacing="8" prefWidth="250" styleClass="map-card">
+                        <Label text="Guarulhos" styleClass="section-title"/>
+                        <Label fx:id="mapGuarulhosLabel" text="0 ocorrencias" styleClass="dashboard-line"/>
+                        <ProgressBar fx:id="mapGuarulhosBar" progress="0" maxWidth="Infinity" styleClass="transfer-progress"/>
+                    </VBox>
+                    <VBox spacing="8" prefWidth="250" styleClass="map-card">
+                        <Label text="Grande Sao Paulo" styleClass="section-title"/>
+                        <Label fx:id="mapSaoPauloLabel" text="0 ocorrencias" styleClass="dashboard-line"/>
+                        <ProgressBar fx:id="mapSaoPauloBar" progress="0" maxWidth="Infinity" styleClass="transfer-progress"/>
+                    </VBox>
+                </FlowPane>
+                <VBox spacing="10" VBox.vgrow="ALWAYS" styleClass="dashboard-panel">
+                    <Label text="Linha operacional" styleClass="section-title"/>
+                    <Label text="Salesopolis -> Mogi das Cruzes -> Guarulhos -> Grande Sao Paulo" wrapText="true" styleClass="map-line"/>
+                    <ListView fx:id="mapOccurrenceList" VBox.vgrow="ALWAYS" styleClass="history-list"/>
+                </VBox>
+            </VBox>
+
+            <VBox fx:id="historyPage" spacing="13" visible="false" managed="false" styleClass="content-panel page-panel">
+                <padding>
+                    <Insets top="21" right="24" bottom="21" left="21"/>
+                </padding>
+                <Label text="Historico" styleClass="page-title"/>
+                <ListView fx:id="historyList" VBox.vgrow="ALWAYS" styleClass="history-list"/>
+            </VBox>
+
+            <VBox fx:id="profilePage" spacing="13" visible="false" managed="false" styleClass="content-panel page-panel">
+                <padding>
+                    <Insets top="21" right="24" bottom="21" left="21"/>
+                </padding>
+                <Label text="Perfil" styleClass="page-title"/>
+                <HBox spacing="21" alignment="CENTER_LEFT">
+                    <StackPane alignment="CENTER" styleClass="avatar-frame">
+                        <ImageView fx:id="profileImageView" fitWidth="116" fitHeight="116" preserveRatio="true"/>
+                    </StackPane>
+                    <VBox spacing="13" HBox.hgrow="ALWAYS">
+                        <TextField fx:id="profileNameField" promptText="Nome do inspetor" styleClass="input"/>
+                        <HBox spacing="8">
+                            <Button fx:id="chooseProfileImageButton" text="Escolher imagem" onAction="#onChooseProfileImage" styleClass="ghost-button"/>
+                            <Button fx:id="saveProfileButton" text="Salvar perfil" onAction="#onSaveProfile" styleClass="primary-button"/>
+                        </HBox>
+                        <Label fx:id="profileStatusLabel" text="Perfil salvo localmente." styleClass="transfer-label"/>
+                    </VBox>
+                </HBox>
+            </VBox>
+
+            <VBox fx:id="skeletonOverlay" alignment="CENTER" visible="false" managed="false" styleClass="skeleton-overlay">
+                <StackPane maxWidth="560" maxHeight="300" styleClass="skeleton-panel">
+                    <VBox spacing="13" alignment="CENTER_LEFT">
+                        <padding>
+                            <Insets top="34" right="34" bottom="34" left="34"/>
+                        </padding>
+                        <Label fx:id="skeletonTitle" text="Sincronizando" styleClass="skeleton-title"/>
+                        <Rectangle width="440" height="21" arcWidth="8" arcHeight="8" styleClass="skeleton-line"/>
+                        <Rectangle width="380" height="21" arcWidth="8" arcHeight="8" styleClass="skeleton-line"/>
+                        <Rectangle width="480" height="89" arcWidth="13" arcHeight="13" styleClass="skeleton-block"/>
+                        <Rectangle fx:id="shimmerBar" width="144" height="240" arcWidth="13" arcHeight="13" styleClass="shimmer-bar"/>
+                    </VBox>
+                </StackPane>
+            </VBox>
+            <VBox fx:id="notificationToast" spacing="6" visible="false" managed="false" prefWidth="360" maxWidth="360" maxHeight="130" styleClass="notification-toast" StackPane.alignment="TOP_RIGHT">
+                <padding>
+                    <Insets top="14" right="16" bottom="14" left="16"/>
+                </padding>
+                <Label fx:id="notificationToastTitle" text="Notificacao" styleClass="notification-toast-title"/>
+                <Label fx:id="notificationToastMessage" text="Mensagem" wrapText="true" styleClass="notification-toast-message"/>
+            </VBox>
+        </StackPane>
+        </content>
+        </ScrollPane>
+    </center>
+</BorderPane>
